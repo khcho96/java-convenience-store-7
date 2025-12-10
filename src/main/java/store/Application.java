@@ -1,13 +1,18 @@
 package store;
 
+import static store.constant.ErrorMessage.NO_EXIST_ERROR;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import store.domain.Products;
 import store.domain.Promotion;
 import store.domain.Promotions;
+import store.domain.vo.PurchaseProducts;
 import store.dto.StockDto;
+import store.util.InputParser;
 import store.util.file.FileReader;
+import store.view.InputView;
 import store.view.OutputView;
 
 public class Application {
@@ -43,6 +48,13 @@ public class Application {
         StockDto stockDto = products.getStockDto();
         OutputView.printStock(stockDto);
 
-//        InputView.readPurchaseProducts();
+        String rawPurchaseProducts = InputView.readPurchaseProducts();
+        List<String> parsePurchaseProducts = InputParser.parsePurchaseProducts(rawPurchaseProducts);
+        PurchaseProducts purchaseProducts = PurchaseProducts.newInstance();
+        for (String productName : parsePurchaseProducts) {
+            purchaseProducts.addProduct(products, productName);
+        }
+
+
     }
 }
