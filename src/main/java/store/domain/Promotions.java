@@ -17,6 +17,15 @@ public class Promotions {
     }
 
     public void addPromotion(String name, int buy, int get, LocalDate startDate, LocalDate endDate) {
+        promotions.add(Promotion.of(name, buy, get, startDate, endDate));
+    }
 
+    public Promotion get(String promotionName) {
+        for (Promotion promotion : promotions) {
+            if (promotion.equalsName(promotionName)) {
+                return promotion;
+            }
+        }
+        return null;
     }
 }
