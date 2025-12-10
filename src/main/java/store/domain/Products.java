@@ -57,4 +57,22 @@ public class Products {
         }
         return new StockDto(st.toString());
     }
+
+    public boolean contains(String productName) {
+        for (Product product : products) {
+            if (product.getName().equals(productName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getQuantityForProduct(String productName) {
+        for (Product product : products) {
+            if (product.getName().equals(productName)) {
+                return product.getPromotionQuantity() + product.getNormalQuantity();
+            }
+        }
+        return 0;
+    }
 }
