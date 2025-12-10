@@ -6,7 +6,9 @@ import java.util.List;
 import store.domain.Products;
 import store.domain.Promotion;
 import store.domain.Promotions;
+import store.dto.StockDto;
 import store.util.file.FileReader;
+import store.view.OutputView;
 
 public class Application {
 
@@ -27,7 +29,7 @@ public class Application {
 
         FileReader fr = new FileReader("src/main/resources/products.md");
         List<String> readProducts = fr.readLines();
-        readProducts.removeFirst();
+        String initStock = readProducts.removeFirst() + "\n";
         Products products = Products.newInstance();
         for (String readProduct : readProducts) {
             String[] split = readProduct.split(",");
@@ -38,8 +40,9 @@ public class Application {
             products.addProduct(name, price, quantity, promotion);
         }
 
-//
-//        OutputView.printStock();
+        StockDto stockDto = products.getStockDto();
+        OutputView.printStock(stockDto);
+
 //        InputView.readPurchaseProducts();
     }
 }

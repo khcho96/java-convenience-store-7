@@ -51,19 +51,44 @@ public class Product {
         return name;
     }
 
-    public int getNormalQuantity() {
-        return normalQuantity;
-    }
-
     public int getPrice() {
         return price;
+    }
+
+    public int getPromotionQuantity() {
+        return promotionQuantity;
+    }
+
+    public int getNormalQuantity() {
+        return normalQuantity;
     }
 
     public Promotion getPromotion() {
         return promotion;
     }
 
-    public int getPromotionQuantity() {
-        return promotionQuantity;
+    public String getNormalQuantityForOutput() {
+        if (normalQuantity == 0) {
+            return "재고 없음";
+        }
+        return normalQuantity + "개";
+    }
+
+    public String getPriceForOutput() {
+        return String.format("%,d원", price);
+    }
+
+    public String getPromotionForOutput() {
+        if (promotion == null) {
+            return "";
+        }
+        return promotion.getName();
+    }
+
+    public String getPromotionQuantityForOutput() {
+        if (promotionQuantity == 0) {
+            return "재고 없음";
+        }
+        return promotionQuantity + "개";
     }
 }

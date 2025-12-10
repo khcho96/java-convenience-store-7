@@ -40,4 +40,24 @@ public class Promotion {
     public int hashCode() {
         return Objects.hashCode(name);
     }
+
+    public int getBuy() {
+        return buy;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public int getGet() {
+        return get;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 }
