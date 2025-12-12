@@ -3,7 +3,6 @@ package store;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import store.domain.Customer;
 import store.domain.Product;
 import store.domain.Products;
@@ -18,11 +17,16 @@ import store.view.OutputView;
 
 public class Application {
 
+    static PurchaseProducts purchaseProducts;
+    static Products products;
+    static Promotions promotions;
+    static Customer customer;
+
     public static void main(String[] args) throws IOException {
         FileReader promotionReader = new FileReader("src/main/resources/promotions.md");
         List<String> readPromotions = promotionReader.readLines();
         readPromotions.removeFirst();
-        Promotions promotions = Promotions.newInstance();
+        promotions = Promotions.newInstance();
         for (String readPromotion : readPromotions) {
             String[] split = readPromotion.split(",");
             String name = split[0];
@@ -36,7 +40,7 @@ public class Application {
         FileReader fr = new FileReader("src/main/resources/products.md");
         List<String> readProducts = fr.readLines();
         readProducts.removeFirst();
-        Products products = Products.newInstance();
+        products = Products.newInstance();
         for (String readProduct : readProducts) {
             String[] split = readProduct.split(",");
             String name = split[0];
@@ -46,63 +50,102 @@ public class Application {
             products.addProduct(name, price, quantity, promotion);
         }
 
-        StockDto stockDto = products.getStockDto();
-        OutputView.printStock(stockDto);
-
-        String rawPurchaseProducts = InputView.readPurchaseProducts();
-        List<String> parsePurchaseProducts = InputParser.parsePurchaseProducts(rawPurchaseProducts);
-        PurchaseProducts purchaseProducts = PurchaseProducts.newInstance();
-        for (String productName : parsePurchaseProducts) {
-            purchaseProducts.addProduct(products, productName);
+        while (true) {
+            try {
+                StockDto stockDto = products.getStockDto();
+                OutputView.printStock(stockDto);
+                String rawPurchaseProducts = InputView.readPurchaseProducts();
+                List<String> parsePurchaseProducts = InputParser.parsePurchaseProducts(rawPurchaseProducts);
+                purchaseProducts = PurchaseProducts.newInstance();
+                for (String productName : parsePurchaseProducts) {
+                    purchaseProducts.addProduct(products, productName);
+                }
+                break;
+            } catch (IllegalArgumentException e) {
+                OutputView.printErrorMessage(e);
+            }
         }
 
         // 4
-        Customer customer = Customer.newInstance();
 
-        List<Product> lessPromotionProducts = purchaseProducts.getLessPromotionProducts(products);
-        for (Product product : lessPromotionProducts) {
-            int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
-            int free = product.getFreeProductQuantity();
+        while (true) {
+            try {
+                customer = Customer.newInstance();
+                List<Product> lessPromotionProducts = purchaseProducts.getLessPromotionProducts(products);
+                for (Product product : lessPromotionProducts) {
+                    int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
+                    int free = product.getFreeProductQuantity();
 
-            String rawChoice = InputView.readFreeProductChoice(product.getName(), free);
-            boolean choice = InputParser.parseChoice(rawChoice);
+                    String rawChoice = InputView.readFreeProductChoice(product.getName(), free);
+                    boolean choice = InputParser.parseChoice(rawChoice);
 
-            if (choice) {
-                customer.addProduct(product, purchaseQuantity + free);
-                continue;
+                    if (choice) {
+                        customer.addProductForPromotion(product, purchaseQuantity + free);
+                        continue;
+                    }
+                    customer.addProductForPromotion(product, purchaseQuantity);
+                }
+                break;
+            } catch (IllegalArgumentException e) {
+                OutputView.printErrorMessage(e);
             }
-            customer.addProduct(product, purchaseQuantity);
         }
 
         // 5
-        List<Product> morePromotionProducts = purchaseProducts.getMorePromotionProducts(products);
-        for (Product product : morePromotionProducts) {
-            int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
-            int impossiblePromotionQuantity = product.getImpossiblePromotionQuantity(purchaseQuantity);
+        while (true) {
+            try {
+                List<Product> morePromotionProducts = purchaseProducts.getMorePromotionProducts(products);
+                for (Product product : morePromotionProducts) {
+                    int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
+                    int impossiblePromotionQuantity = product.getImpossiblePromotionQuantity(purchaseQuantity);
 
-            String rawChoice = InputView.readImpossiblePromotionChoice(product.getName(), impossiblePromotionQuantity);
-            boolean choice = InputParser.parseChoice(rawChoice);
+                    String rawChoice = InputView.readImpossiblePromotionChoice(product.getName(),
+                            impossiblePromotionQuantity);
+                    boolean choice = InputParser.parseChoice(rawChoice);
 
-            if (choice) {
-                customer.addProduct(product, purchaseQuantity);
-                continue;
+                    if (choice) {
+                        customer.addProductForPromotion(product, purchaseQuantity);
+                        continue;
+                    }
+                    customer.addProductForPromotion(product, purchaseQuantity - impossiblePromotionQuantity);
+                }
+                break;
+            } catch (IllegalArgumentException e) {
+                OutputView.printErrorMessage(e);
             }
-            customer.addProduct(product, purchaseQuantity - impossiblePromotionQuantity);
         }
 
         // 6
-        List<Product> normalPromotionProducts = purchaseProducts.getNormalPromotionProducts(products);
-        for (Product product : normalPromotionProducts) {
-            int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
-            customer.addProduct(product, purchaseQuantity);
+        while (true) {
+            try {
+                List<Product> normalPromotionProducts = purchaseProducts.getNormalPromotionProducts(products);
+                for (Product product : normalPromotionProducts) {
+                    int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
+                    customer.addProductForPromotion(product, purchaseQuantity);
+                }
+                break;
+            } catch (IllegalArgumentException e) {
+                OutputView.printErrorMessage(e);
+            }
         }
 
         // 7
-//        purchaseProducts.getNoPromotionProducts(products);
-//
-//        OutputView.printStock(products.getStockDto());
-//        System.out.println(customer.getPurchaseProducts());
-//        System.out.println(customer.getPresentProducts());
+        while (true) {
+            try {
+                List<Product> noPromotionProducts = purchaseProducts.getNoPromotionProducts(products);
+                for (Product product : noPromotionProducts) {
+                    int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
+                    customer.addProductForNormal(product, purchaseQuantity);
+                }
+                break;
+            } catch (IllegalArgumentException e) {
+                OutputView.printErrorMessage(e);
+            }
+        }
+
+        OutputView.printStock(products.getStockDto());
+        System.out.println(customer.getPurchaseProducts());
+        System.out.println(customer.getPresentProducts());
 
         // 8
     }

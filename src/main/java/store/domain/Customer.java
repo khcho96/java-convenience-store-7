@@ -18,7 +18,7 @@ public class Customer {
         return new Customer();
     }
 
-    public void addProduct(Product product, int purchaseQuantity) {
+    public void addProductForPromotion(Product product, int purchaseQuantity) {
         // 구매 상품
         int buy = product.getPromotion().getBuy();
         int get = product.getPromotion().getGet();
@@ -31,7 +31,6 @@ public class Customer {
         int presentQuantity = get * setQuantity;
 
         purchaseProducts.put(product, List.of(purchaseQuantity, presentQuantity));
-
         product.updateStock(purchaseQuantity);
     }
 
@@ -41,5 +40,10 @@ public class Customer {
 
     public Map<Product, List<Integer>> getPurchaseProducts() {
         return purchaseProducts;
+    }
+
+    public void addProductForNormal(Product product, int purchaseQuantity) {
+        purchaseProducts.put(product, List.of(purchaseQuantity, 0));
+        product.updateStock(purchaseQuantity);
     }
 }

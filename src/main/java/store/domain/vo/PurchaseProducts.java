@@ -85,7 +85,7 @@ public class PurchaseProducts {
     }
 
     public List<Product> getNormalPromotionProducts(Products products) {
-        List<Product> moreProducts = new ArrayList<>();
+        List<Product> normalPromotionProducts = new ArrayList<>();
         for (Product product : products.getProducts()) {
             // 프로모션인지 또는 구매 상품인지 판단
             if (!product.isPromotion() || !purchaseProducts.containsKey(product.getName())) {
@@ -94,9 +94,19 @@ public class PurchaseProducts {
 
             if (!product.isLessPromotionProduct(purchaseProducts.get(product.getName()))
                     && !product.isMorePromotionProduct(purchaseProducts.get(product.getName()))) {
-                moreProducts.add(product);
+                normalPromotionProducts.add(product);
             }
         }
-        return moreProducts;
+        return normalPromotionProducts;
+    }
+
+    public List<Product> getNoPromotionProducts(Products products) {
+        List<Product> noPromotionProducts = new ArrayList<>();
+        for (Product product : products.getProducts()) {
+            if (!product.isPromotion() && purchaseProducts.containsKey(product.getName())) {
+                noPromotionProducts.add(product);
+            }
+        }
+        return noPromotionProducts;
     }
 }
