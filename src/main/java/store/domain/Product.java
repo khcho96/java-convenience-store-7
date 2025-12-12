@@ -11,6 +11,7 @@ public class Product {
     private int promotionQuantity;
     private int normalQuantity;
     private final Promotion promotion;
+    private boolean isChecked;
 
     private Product(String name, int price, int promotionQuantity, int normalQuantity, Promotion promotion) {
         this.name = name;
@@ -55,6 +56,10 @@ public class Product {
 
     public int getPrice() {
         return price;
+    }
+
+    public int getPrice(int quantity) {
+        return price * quantity;
     }
 
     public int getPromotionQuantity() {
@@ -149,5 +154,13 @@ public class Product {
         int maxPromotionQuantity = promotionQuantity - mod;
 
         return purchaseQuantity - maxPromotionQuantity;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setCheckedTrue() {
+        isChecked = true;
     }
 }

@@ -2,6 +2,7 @@ package store;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 import store.domain.Customer;
 import store.domain.Product;
@@ -9,6 +10,7 @@ import store.domain.Products;
 import store.domain.Promotion;
 import store.domain.Promotions;
 import store.domain.vo.PurchaseProducts;
+import store.dto.ReceiptDto;
 import store.dto.StockDto;
 import store.util.InputParser;
 import store.util.file.FileReader;
@@ -68,7 +70,6 @@ public class Application {
         }
 
         // 4
-
         while (true) {
             try {
                 customer = Customer.newInstance();
@@ -147,5 +148,10 @@ public class Application {
 
         FileWriter fw = new FileWriter("src/main/resources/temp products.md");
         fw.writeAll(products.getStockForFile());
+
+        ReceiptDto receiptDto = customer.getReceipt();
+        OutputView.printReceipt(receiptDto);
+
+        OutputView.printStock(products.getStockDto());
     }
 }

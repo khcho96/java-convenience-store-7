@@ -4,7 +4,7 @@ import static store.constant.ErrorMessage.EXCEED_ERROR;
 import static store.constant.ErrorMessage.NO_EXIST_ERROR;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import store.domain.Product;
@@ -15,7 +15,7 @@ public class PurchaseProducts {
     private final Map<String, Integer> purchaseProducts;
 
     private PurchaseProducts() {
-        this.purchaseProducts = new HashMap<>();
+        this.purchaseProducts = new LinkedHashMap<>();
     }
 
     public static PurchaseProducts newInstance() {
@@ -52,6 +52,11 @@ public class PurchaseProducts {
     public List<Product> getLessPromotionProducts(Products products) {
         List<Product> lessProducts = new ArrayList<>();
         for (Product product : products.getProducts()) {
+            // 이미 계산한 상품인지 확인
+            if (product.isChecked()) {
+                continue;
+            }
+
             // 프로모션인지 또는 구매 상품인지 판단
             if (!product.isPromotion() || !purchaseProducts.containsKey(product.getName())) {
                 continue;
@@ -60,6 +65,7 @@ public class PurchaseProducts {
             // 주문 개수 < 프로모션 적용 개수인 상품은 주문 개수를 값으로 저장
             if (product.isLessPromotionProduct(purchaseProducts.get(product.getName()))) {
                 lessProducts.add(product);
+                product.setCheckedTrue();
             }
         }
         return lessProducts;
@@ -68,6 +74,11 @@ public class PurchaseProducts {
     public List<Product> getMorePromotionProducts(Products products) {
         List<Product> moreProducts = new ArrayList<>();
         for (Product product : products.getProducts()) {
+            // 이미 계산한 상품인지 확인
+            if (product.isChecked()) {
+                continue;
+            }
+
             // 프로모션인지 또는 구매 상품인지 판단
             if (!product.isPromotion() || !purchaseProducts.containsKey(product.getName())) {
                 continue;
@@ -75,6 +86,7 @@ public class PurchaseProducts {
 
             if (product.isMorePromotionProduct(purchaseProducts.get(product.getName()))) {
                 moreProducts.add(product);
+                product.setCheckedTrue();
             }
         }
         return moreProducts;
@@ -87,6 +99,11 @@ public class PurchaseProducts {
     public List<Product> getNormalPromotionProducts(Products products) {
         List<Product> normalPromotionProducts = new ArrayList<>();
         for (Product product : products.getProducts()) {
+            // 이미 계산한 상품인지 확인
+            if (product.isChecked()) {
+                continue;
+            }
+
             // 프로모션인지 또는 구매 상품인지 판단
             if (!product.isPromotion() || !purchaseProducts.containsKey(product.getName())) {
                 continue;
@@ -95,6 +112,7 @@ public class PurchaseProducts {
             if (!product.isLessPromotionProduct(purchaseProducts.get(product.getName()))
                     && !product.isMorePromotionProduct(purchaseProducts.get(product.getName()))) {
                 normalPromotionProducts.add(product);
+                product.setCheckedTrue();
             }
         }
         return normalPromotionProducts;
@@ -103,8 +121,14 @@ public class PurchaseProducts {
     public List<Product> getNoPromotionProducts(Products products) {
         List<Product> noPromotionProducts = new ArrayList<>();
         for (Product product : products.getProducts()) {
+            // 이미 계산한 상품인지 확인
+            if (product.isChecked()) {
+                continue;
+            }
+
             if (!product.isPromotion() && purchaseProducts.containsKey(product.getName())) {
                 noPromotionProducts.add(product);
+                product.setCheckedTrue();
             }
         }
         return noPromotionProducts;
