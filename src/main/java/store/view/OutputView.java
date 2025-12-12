@@ -30,7 +30,7 @@ public class OutputView {
 
         System.out.println("\n============W 편의점============");
         System.out.println("상품명            수량      금액");
-        for (Product product : presentProducts.keySet()) {
+        for (Product product : purchaseProducts.keySet()) {
             int quantity = purchaseProducts.get(product);
             int price = product.getPrice(quantity);
             System.out.printf("%-16s%-8s%,d\n", product.getName(), quantity, price);
