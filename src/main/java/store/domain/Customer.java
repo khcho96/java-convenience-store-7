@@ -7,11 +7,10 @@ import java.util.Map;
 public class Customer {
 
     private final Map<Product, List<Integer>> purchaseProducts;
-    private final Map<Product, List<Integer>> presentProducts;
+    private int membershipDiscountAmount;
 
     private Customer() {
         purchaseProducts = new HashMap<>();
-        presentProducts = new HashMap<>();
     }
 
     public static Customer newInstance() {
@@ -19,7 +18,6 @@ public class Customer {
     }
 
     public void addProductForPromotion(Product product, int purchaseQuantity) {
-        // 구매 상품
         int buy = product.getPromotion().getBuy();
         int get = product.getPromotion().getGet();
         int setSize = buy + get;
@@ -29,21 +27,39 @@ public class Customer {
             setQuantity = setQuantityNotEqual;
         }
         int presentQuantity = get * setQuantity;
+        int noPromotionQuantity = purchaseQuantity - setSize * setQuantity;
 
-        purchaseProducts.put(product, List.of(purchaseQuantity, presentQuantity));
+        purchaseProducts.put(product, List.of(purchaseQuantity, presentQuantity, noPromotionQuantity));
         product.updateStock(purchaseQuantity);
     }
 
-    public Map<Product, List<Integer>> getPresentProducts() {
-        return presentProducts;
+    public void addProductForNormal(Product product, int purchaseQuantity) {
+        purchaseProducts.put(product, List.of(purchaseQuantity, 0, purchaseQuantity));
+        product.updateStock(purchaseQuantity);
+    }
+
+    public void setMembershipDiscountAmount() {
+        membershipDiscountAmount = calculateMembershipDiscountAmount();
+        if (membershipDiscountAmount > 8000) {
+            membershipDiscountAmount = 8000;
+        }
+    }
+
+    private int calculateMembershipDiscountAmount() {
+        int sum = 0;
+        for (Product product : purchaseProducts.keySet()) {
+            int price = product.getPrice();
+            int noPromotionQuantity = purchaseProducts.get(product).get(2);
+            sum += price * noPromotionQuantity;
+        }
+        return (int) (sum * 0.3);
     }
 
     public Map<Product, List<Integer>> getPurchaseProducts() {
         return purchaseProducts;
     }
 
-    public void addProductForNormal(Product product, int purchaseQuantity) {
-        purchaseProducts.put(product, List.of(purchaseQuantity, 0));
-        product.updateStock(purchaseQuantity);
+    public int getMembershipDiscountAmount() {
+        return membershipDiscountAmount;
     }
 }

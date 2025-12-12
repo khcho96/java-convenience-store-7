@@ -116,26 +116,27 @@ public class Application {
         }
 
         // 6
-        while (true) {
-            try {
-                List<Product> normalPromotionProducts = purchaseProducts.getNormalPromotionProducts(products);
-                for (Product product : normalPromotionProducts) {
-                    int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
-                    customer.addProductForPromotion(product, purchaseQuantity);
-                }
-                break;
-            } catch (IllegalArgumentException e) {
-                OutputView.printErrorMessage(e);
-            }
+        List<Product> normalPromotionProducts = purchaseProducts.getNormalPromotionProducts(products);
+        for (Product product : normalPromotionProducts) {
+            int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
+            customer.addProductForPromotion(product, purchaseQuantity);
         }
 
         // 7
+        List<Product> noPromotionProducts = purchaseProducts.getNoPromotionProducts(products);
+        for (Product product : noPromotionProducts) {
+            int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
+            customer.addProductForNormal(product, purchaseQuantity);
+        }
+
+        // 8
         while (true) {
             try {
-                List<Product> noPromotionProducts = purchaseProducts.getNoPromotionProducts(products);
-                for (Product product : noPromotionProducts) {
-                    int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
-                    customer.addProductForNormal(product, purchaseQuantity);
+                String rawChoice = InputView.readMembershipChoice();
+                boolean choice = InputParser.parseChoice(rawChoice);
+
+                if (choice) {
+                    customer.setMembershipDiscountAmount();
                 }
                 break;
             } catch (IllegalArgumentException e) {
@@ -143,10 +144,8 @@ public class Application {
             }
         }
 
-        OutputView.printStock(products.getStockDto());
-        System.out.println(customer.getPurchaseProducts());
-        System.out.println(customer.getPresentProducts());
-
-        // 8
+//        OutputView.printStock(products.getStockDto());
+//        System.out.println(customer.getPurchaseProducts());
+//        System.out.println(customer.getMembershipDiscountAmount());
     }
 }
