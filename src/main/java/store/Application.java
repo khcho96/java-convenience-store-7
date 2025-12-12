@@ -12,6 +12,7 @@ import store.domain.vo.PurchaseProducts;
 import store.dto.StockDto;
 import store.util.InputParser;
 import store.util.file.FileReader;
+import store.util.file.FileWriter;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -144,8 +145,7 @@ public class Application {
             }
         }
 
-//        OutputView.printStock(products.getStockDto());
-//        System.out.println(customer.getPurchaseProducts());
-//        System.out.println(customer.getMembershipDiscountAmount());
+        FileWriter fw = new FileWriter("src/main/resources/temp products.md");
+        fw.writeAll(products.getStockForFile());
     }
 }

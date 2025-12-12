@@ -16,8 +16,9 @@ public class Products {
         return new Products();
     }
 
-    public String getStock(String stock) {
-        StringBuilder st = new StringBuilder(stock);
+    public String getStockForFile() {
+        StringBuilder st = new StringBuilder();
+        st.append("name,price,quantity,promotion\n");
         for (Product product : products) {
             if (product.getPromotion() == null) {
                 st.append(product.getName() + "," + product.getPrice() + "," + product.getNormalQuantity() + ","
