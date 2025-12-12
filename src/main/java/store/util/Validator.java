@@ -6,6 +6,7 @@ import static store.constant.ErrorMessage.INVALID_ERROR;
 public final class Validator {
 
     private static final String CSV_FORMAT = "^ *(\\[[가-힣a-zA-Z]+-\\d+])+ *(, *(\\[[가-힣a-zA-Z]+-\\d+])+ *)*$";
+    private static final String YES_NO = "[YN]";
 
     private Validator() {}
 
@@ -23,6 +24,12 @@ public final class Validator {
 
     public static void validateQuantity(int quantity) {
         if (quantity <= 0) {
+            throw new IllegalArgumentException(INVALID_ERROR.getErrorMessage());
+        }
+    }
+
+    public static void validateChoiceFormat(String rawChoice) {
+        if (!rawChoice.matches(YES_NO)) {
             throw new IllegalArgumentException(INVALID_ERROR.getErrorMessage());
         }
     }

@@ -1,6 +1,8 @@
 package store.domain;
 
+import java.time.LocalDate;
 import java.util.Objects;
+import store.time.DateTime;
 
 public class Product {
 
@@ -90,5 +92,35 @@ public class Product {
             return "재고 없음";
         }
         return promotionQuantity + "개";
+    }
+
+    public boolean isPromotion() {
+        LocalDate now = DateTime.now();
+        return promotion != null
+                && !now.isBefore(promotion.getStartDate())
+                && !now.isAfter(promotion.getEndDate());
+    }
+
+    public boolean isLessPromotionProduct(int purchaseQuantity) {
+        int buy = promotion.getBuy();
+        int get = promotion.getGet();
+        int mod = purchaseQuantity % (buy + get);
+
+        if (purchaseQuantity >= promotionQuantity) {
+            return false;
+        }
+
+        int maxPurchaseQuantity = purchaseQuantity + (buy + get - mod);
+
+        return buy <= mod && maxPurchaseQuantity <= promotionQuantity;
+    }
+
+    public int getFreeProductQuantity() {
+        return promotion.getGet();
+    }
+
+    public void updateStock(int promotionQuantity, int normalQuantity) {
+        this.promotionQuantity -= promotionQuantity;
+        this.normalQuantity -= normalQuantity;
     }
 }

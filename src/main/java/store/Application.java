@@ -5,6 +5,9 @@ import static store.constant.ErrorMessage.NO_EXIST_ERROR;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import store.domain.Customer;
+import store.domain.Product;
 import store.domain.Products;
 import store.domain.Promotion;
 import store.domain.Promotions;
@@ -28,13 +31,13 @@ public class Application {
             int buy = Integer.parseInt(split[1]);
             int get = Integer.parseInt(split[2]);
             LocalDate startDate = LocalDate.parse(split[3]);
-            LocalDate endDate = LocalDate.parse(split[3]);
+            LocalDate endDate = LocalDate.parse(split[4]);
             promotions.addPromotion(name, buy, get, startDate, endDate);
         }
 
         FileReader fr = new FileReader("src/main/resources/products.md");
         List<String> readProducts = fr.readLines();
-        String initStock = readProducts.removeFirst() + "\n";
+        readProducts.removeFirst();
         Products products = Products.newInstance();
         for (String readProduct : readProducts) {
             String[] split = readProduct.split(",");
@@ -55,6 +58,32 @@ public class Application {
             purchaseProducts.addProduct(products, productName);
         }
 
+        // 4
+        Customer customer = Customer.newInstance();
 
+        Map<Product, Integer> lessPromotionProducts = purchaseProducts.getLessPromotionProducts(products);
+        for (Product product : lessPromotionProducts.keySet()) {
+            int free = product.getFreeProductQuantity();
+
+            String rawChoice = InputView.readFreeProductChoice(product.getName(), free);
+            boolean choice = InputParser.parseChoice(rawChoice);
+            int purchaseQuantity = lessPromotionProducts.get(product);
+            if (choice) {
+                customer.addProduct(product, purchaseQuantity + free);
+                continue;
+            }
+            customer.addProduct(product, purchaseQuantity);
+        }
+
+        // 5
+//        purchaseProducts.getMorePromotionProducts(products);
+
+        // 6
+//        purchaseProducts.getExactPromotionProducts(products);
+
+        // 7
+//        purchaseProducts.getNoPromotionProducts(products);
+
+        // 8
     }
 }

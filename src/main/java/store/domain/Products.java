@@ -75,4 +75,8 @@ public class Products {
         }
         return 0;
     }
+
+    public List<Product> getProducts() {
+        return products;
+    }
 }

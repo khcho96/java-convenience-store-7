@@ -6,9 +6,9 @@ import java.util.stream.Stream;
 
 public final class InputParser {
 
-    private static final String DELIMITER = ",";
     private static final String FIRST_DELIMITER = ",";
     private static final String SECOND_DELIMITER = "-";
+    private static final String YES = "Y";
 
     private InputParser() {
     }
@@ -34,5 +34,12 @@ public final class InputParser {
         }
 
         return purchaseProducts;
+    }
+
+    public static boolean parseChoice(String rawChoice) {
+        Validator.validateNullOrBlank(rawChoice);
+        rawChoice = rawChoice.strip();
+        Validator.validateChoiceFormat(rawChoice);
+        return rawChoice.equals(YES);
     }
 }

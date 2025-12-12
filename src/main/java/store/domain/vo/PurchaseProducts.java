@@ -5,6 +5,7 @@ import static store.constant.ErrorMessage.NO_EXIST_ERROR;
 
 import java.util.HashMap;
 import java.util.Map;
+import store.domain.Product;
 import store.domain.Products;
 
 public class PurchaseProducts {
@@ -40,5 +41,25 @@ public class PurchaseProducts {
     @Override
     public String toString() {
         return purchaseProducts.toString();
+    }
+
+    public Map<String, Integer> getPurchaseProducts() {
+        return purchaseProducts;
+    }
+
+    public Map<Product, Integer> getLessPromotionProducts(Products products) {
+        Map<Product, Integer> lessProducts = new HashMap<>();
+        for (Product product : products.getProducts()) {
+            // 프로모션인지 또는 구매 상품인지 판단
+            if (!product.isPromotion() || !purchaseProducts.containsKey(product.getName())) {
+                continue;
+            }
+
+            // 주문 개수 < 프로모션 적용 개수인 상품은 (주문 개수, 증정 개수)를 값으로 저장
+            if (product.isLessPromotionProduct(purchaseProducts.get(product.getName()))) {
+                lessProducts.put(product, purchaseProducts.get(product.getName()));
+            }
+        }
+        return lessProducts;
     }
 }
