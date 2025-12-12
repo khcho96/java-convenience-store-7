@@ -20,21 +20,29 @@ public class StoreController {
     }
 
     public void run() throws IOException {
-        readFiles();
-        
-        StockDto stockDto = storeService.getStockDto();
-        OutputView.printStock(stockDto);
-        
-        registerPurchaseProducts();
+        while (true) {
+            readFiles();
 
-        handleFreeProducts();
-        handleOverProducts();
-        handleNormalProducts();
-        handleNoPromotionProducts();
-        setMembershipDiscountAmount();
+            StockDto stockDto = storeService.getStockDto();
+            OutputView.printStock(stockDto);
 
-        writeStockFile();
-        printResult();
+            registerPurchaseProducts();
+
+            handleFreeProducts();
+            handleOverProducts();
+            handleNormalProducts();
+            handleNoPromotionProducts();
+            setMembershipDiscountAmount();
+
+            writeStockFile();
+            printResult();
+
+            String rawChoice = InputView.readMorePurchaseChoice();
+            boolean choice = InputParser.parseChoice(rawChoice);
+            if (!choice) {
+                break;
+            }
+        }
     }
 
     private void readFiles() throws IOException {
