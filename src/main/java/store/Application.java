@@ -1,7 +1,5 @@
 package store;
 
-import static store.constant.ErrorMessage.NO_EXIST_ERROR;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -67,6 +65,7 @@ public class Application {
 
             String rawChoice = InputView.readFreeProductChoice(product.getName(), free);
             boolean choice = InputParser.parseChoice(rawChoice);
+
             int purchaseQuantity = lessPromotionProducts.get(product);
             if (choice) {
                 customer.addProduct(product, purchaseQuantity + free);
@@ -76,10 +75,27 @@ public class Application {
         }
 
         // 5
-//        purchaseProducts.getMorePromotionProducts(products);
+        Map<Product, Integer> morePromotionProducts = purchaseProducts.getMorePromotionProducts(products);
+        for (Product product : morePromotionProducts.keySet()) {
+            int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
+            int impossiblePromotionQuantity = product.getImpossiblePromotionQuantity(purchaseQuantity);
+
+            String rawChoice = InputView.readImpossiblePromotionChoice(product.getName(), impossiblePromotionQuantity);
+            boolean choice = InputParser.parseChoice(rawChoice);
+
+            if (choice) {
+                customer.addProduct(product, purchaseQuantity);
+                continue;
+            }
+            customer.addProduct(product, purchaseQuantity - impossiblePromotionQuantity);
+        }
 
         // 6
 //        purchaseProducts.getExactPromotionProducts(products);
+
+//        OutputView.printStock(products.getStockDto());
+//        System.out.println(customer.getPurchaseProducts());
+//        System.out.println(customer.getPresentProducts());
 
         // 7
 //        purchaseProducts.getNoPromotionProducts(products);

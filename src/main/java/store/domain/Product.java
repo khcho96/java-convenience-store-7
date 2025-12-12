@@ -115,12 +115,39 @@ public class Product {
         return buy <= mod && maxPurchaseQuantity <= promotionQuantity;
     }
 
+    public boolean isMorePromotionProduct(int purchaseQuantity) {
+        int buy = promotion.getBuy();
+        int get = promotion.getGet();
+        int setSize = buy + get;
+        int mod = purchaseQuantity % setSize;
+        int minPromotionQuantity = purchaseQuantity - mod;
+
+        return minPromotionQuantity > promotionQuantity;
+    }
+
     public int getFreeProductQuantity() {
         return promotion.getGet();
     }
 
-    public void updateStock(int promotionQuantity, int normalQuantity) {
-        this.promotionQuantity -= promotionQuantity;
-        this.normalQuantity -= normalQuantity;
+    public void updateStock(int quantity) {
+        if (this.promotionQuantity >= quantity) {
+            this.promotionQuantity -= quantity;
+            return;
+        }
+
+        quantity -= this.promotionQuantity;
+        this.promotionQuantity = 0;
+
+        this.normalQuantity -= quantity;
+    }
+
+    public int getImpossiblePromotionQuantity(int purchaseQuantity) {
+        int buy = promotion.getBuy();
+        int get = promotion.getGet();
+        int setSize = buy + get;
+        int mod = promotionQuantity % setSize;
+        int maxPromotionQuantity = promotionQuantity - mod;
+
+        return purchaseQuantity - maxPromotionQuantity;
     }
 }

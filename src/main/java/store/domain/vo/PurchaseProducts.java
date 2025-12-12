@@ -55,11 +55,30 @@ public class PurchaseProducts {
                 continue;
             }
 
-            // 주문 개수 < 프로모션 적용 개수인 상품은 (주문 개수, 증정 개수)를 값으로 저장
+            // 주문 개수 < 프로모션 적용 개수인 상품은 주문 개수를 값으로 저장
             if (product.isLessPromotionProduct(purchaseProducts.get(product.getName()))) {
                 lessProducts.put(product, purchaseProducts.get(product.getName()));
             }
         }
         return lessProducts;
+    }
+
+    public Map<Product, Integer> getMorePromotionProducts(Products products) {
+        Map<Product, Integer> moreProducts = new HashMap<>();
+        for (Product product : products.getProducts()) {
+            // 프로모션인지 또는 구매 상품인지 판단
+            if (!product.isPromotion() || !purchaseProducts.containsKey(product.getName())) {
+                continue;
+            }
+
+            if (product.isMorePromotionProduct(purchaseProducts.get(product.getName()))) {
+                moreProducts.put(product, purchaseProducts.get(product.getName()));
+            }
+        }
+        return moreProducts;
+    }
+
+    public int getPurchaseQuantity(Product product) {
+        return purchaseProducts.get(product.getName());
     }
 }

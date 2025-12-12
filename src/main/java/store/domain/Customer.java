@@ -24,11 +24,15 @@ public class Customer {
         int get = product.getPromotion().getGet();
         int setSize = buy + get;
         int setQuantity = purchaseQuantity / setSize;
-
+        int setQuantityNotEqual = product.getPromotionQuantity() / setSize;
+        if (setQuantity > setQuantityNotEqual) {
+            setQuantity = setQuantityNotEqual;
+        }
         int presentQuantity = get * setQuantity;
+
         purchaseProducts.put(product, List.of(purchaseQuantity, presentQuantity));
 
-        product.updateStock(purchaseQuantity ,0);
+        product.updateStock(purchaseQuantity);
     }
 
     public Map<Product, List<Integer>> getPresentProducts() {
