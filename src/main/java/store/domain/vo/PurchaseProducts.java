@@ -3,7 +3,9 @@ package store.domain.vo;
 import static store.constant.ErrorMessage.EXCEED_ERROR;
 import static store.constant.ErrorMessage.NO_EXIST_ERROR;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import store.domain.Product;
 import store.domain.Products;
@@ -47,8 +49,8 @@ public class PurchaseProducts {
         return purchaseProducts;
     }
 
-    public Map<Product, Integer> getLessPromotionProducts(Products products) {
-        Map<Product, Integer> lessProducts = new HashMap<>();
+    public List<Product> getLessPromotionProducts(Products products) {
+        List<Product> lessProducts = new ArrayList<>();
         for (Product product : products.getProducts()) {
             // 프로모션인지 또는 구매 상품인지 판단
             if (!product.isPromotion() || !purchaseProducts.containsKey(product.getName())) {
@@ -57,14 +59,14 @@ public class PurchaseProducts {
 
             // 주문 개수 < 프로모션 적용 개수인 상품은 주문 개수를 값으로 저장
             if (product.isLessPromotionProduct(purchaseProducts.get(product.getName()))) {
-                lessProducts.put(product, purchaseProducts.get(product.getName()));
+                lessProducts.add(product);
             }
         }
         return lessProducts;
     }
 
-    public Map<Product, Integer> getMorePromotionProducts(Products products) {
-        Map<Product, Integer> moreProducts = new HashMap<>();
+    public List<Product> getMorePromotionProducts(Products products) {
+        List<Product> moreProducts = new ArrayList<>();
         for (Product product : products.getProducts()) {
             // 프로모션인지 또는 구매 상품인지 판단
             if (!product.isPromotion() || !purchaseProducts.containsKey(product.getName())) {
@@ -72,7 +74,7 @@ public class PurchaseProducts {
             }
 
             if (product.isMorePromotionProduct(purchaseProducts.get(product.getName()))) {
-                moreProducts.put(product, purchaseProducts.get(product.getName()));
+                moreProducts.add(product);
             }
         }
         return moreProducts;
@@ -80,5 +82,21 @@ public class PurchaseProducts {
 
     public int getPurchaseQuantity(Product product) {
         return purchaseProducts.get(product.getName());
+    }
+
+    public List<Product> getNormalPromotionProducts(Products products) {
+        List<Product> moreProducts = new ArrayList<>();
+        for (Product product : products.getProducts()) {
+            // 프로모션인지 또는 구매 상품인지 판단
+            if (!product.isPromotion() || !purchaseProducts.containsKey(product.getName())) {
+                continue;
+            }
+
+            if (!product.isLessPromotionProduct(purchaseProducts.get(product.getName()))
+                    && !product.isMorePromotionProduct(purchaseProducts.get(product.getName()))) {
+                moreProducts.add(product);
+            }
+        }
+        return moreProducts;
     }
 }

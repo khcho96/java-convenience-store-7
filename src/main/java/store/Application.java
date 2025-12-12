@@ -59,14 +59,14 @@ public class Application {
         // 4
         Customer customer = Customer.newInstance();
 
-        Map<Product, Integer> lessPromotionProducts = purchaseProducts.getLessPromotionProducts(products);
-        for (Product product : lessPromotionProducts.keySet()) {
+        List<Product> lessPromotionProducts = purchaseProducts.getLessPromotionProducts(products);
+        for (Product product : lessPromotionProducts) {
+            int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
             int free = product.getFreeProductQuantity();
 
             String rawChoice = InputView.readFreeProductChoice(product.getName(), free);
             boolean choice = InputParser.parseChoice(rawChoice);
 
-            int purchaseQuantity = lessPromotionProducts.get(product);
             if (choice) {
                 customer.addProduct(product, purchaseQuantity + free);
                 continue;
@@ -75,8 +75,8 @@ public class Application {
         }
 
         // 5
-        Map<Product, Integer> morePromotionProducts = purchaseProducts.getMorePromotionProducts(products);
-        for (Product product : morePromotionProducts.keySet()) {
+        List<Product> morePromotionProducts = purchaseProducts.getMorePromotionProducts(products);
+        for (Product product : morePromotionProducts) {
             int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
             int impossiblePromotionQuantity = product.getImpossiblePromotionQuantity(purchaseQuantity);
 
@@ -91,14 +91,18 @@ public class Application {
         }
 
         // 6
-//        purchaseProducts.getExactPromotionProducts(products);
-
-//        OutputView.printStock(products.getStockDto());
-//        System.out.println(customer.getPurchaseProducts());
-//        System.out.println(customer.getPresentProducts());
+        List<Product> normalPromotionProducts = purchaseProducts.getNormalPromotionProducts(products);
+        for (Product product : normalPromotionProducts) {
+            int purchaseQuantity = purchaseProducts.getPurchaseQuantity(product);
+            customer.addProduct(product, purchaseQuantity);
+        }
 
         // 7
 //        purchaseProducts.getNoPromotionProducts(products);
+//
+//        OutputView.printStock(products.getStockDto());
+//        System.out.println(customer.getPurchaseProducts());
+//        System.out.println(customer.getPresentProducts());
 
         // 8
     }
