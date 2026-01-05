@@ -1,6 +1,9 @@
 package store.domain;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import store.constant.ErrorMessage;
 
 public class Store {
 
@@ -26,5 +29,33 @@ public class Store {
 
     public Stock getStock() {
         return stock;
+    }
+
+    public void purchase(Map<String, Integer> purchaseItems) {
+        List<Item> items = stock.getItems();
+
+        validate(items, purchaseItems);
+
+
+    }
+
+    private void validate(List<Item> items, Map<String, Integer> purchaseItems) {
+        for (String itemName : purchaseItems.keySet()) {
+            Item item = getItem(items, itemName);
+            validatePurchasePossible(item, purchaseItems.get(itemName));
+        }
+    }
+
+    private Item getItem(List<Item> items, String itemName) {
+        return items.stream()
+                .filter(item -> item.getName().equals(itemName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NO_EXIST_ITEMS_ERROR.getErrorMessage()));
+    }
+
+    private void validatePurchasePossible(Item item, int purchaseQuantity) {
+        if (purchaseQuantity > item.getTotalQuantity()) {
+            throw new IllegalArgumentException(ErrorMessage.MAX_ITEMS_ERROR.getErrorMessage());
+        }
     }
 }

@@ -2,6 +2,7 @@ package store.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import store.domain.Stock;
 import store.domain.Store;
 
@@ -39,5 +40,9 @@ public class StoreService {
 
     public Stock getStock() {
         return store.getStock();
+    }
+
+    public void purchase(Map<String, Integer> items) {
+        store.purchase(items);
     }
 }

@@ -1,7 +1,7 @@
 package store.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import store.constant.Option;
 
 public final class InputParser {
@@ -16,24 +16,22 @@ public final class InputParser {
         return Option.from(rawInput.strip());
     }
 
-    public static List<String> parseItems(String rawInput) {
+    public static Map<String, Integer> parseItems(String rawInput) {
         rawInput = rawInput.strip();
         Validator.validateCsvFormat(rawInput);
 
         return getItems(rawInput);
     }
 
-    private static List<String> getItems(String rawInput) {
-        List<String> list = new ArrayList<>();
+    private static Map<String, Integer> getItems(String rawInput) {
+        Map<String, Integer> items = new HashMap<>();
         String[] split = rawInput.split(FIRST_DELIMITER);
         for (String s : split) {
             String strip = s.strip();
             String[] split1 = strip.substring(1, strip.length() - 1).split(SECOND_DELIMITER);
 
-            for (int i = 0; i < NumberConvertor.convertToNumber(split1[1]); i++) {
-                list.add(split1[0].strip());
-            }
+            items.put(split1[0], NumberConvertor.convertToNumber(split1[1]));
         }
-        return list;
+        return items;
     }
 }

@@ -46,4 +46,8 @@ public class Item {
     public void setNormalQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public int getTotalQuantity() {
+        return proQuantity + quantity;
+    }
 }
