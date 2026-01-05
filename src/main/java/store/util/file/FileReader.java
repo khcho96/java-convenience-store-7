@@ -9,8 +9,6 @@ import java.util.List;
 
 public class FileReader {
 
-    private static final int BUFFER_SIZE = 8192;
-
     private final java.io.FileReader fr;
 
     public FileReader(String fileName) throws IOException {
@@ -32,7 +30,7 @@ public class FileReader {
     // 파일 전체를 한 줄 씩 나눠서 읽기
     public List<String> readLines() throws IOException {
         List<String> contents = new ArrayList<>();
-        BufferedReader br = new BufferedReader(fr, BUFFER_SIZE);
+        BufferedReader br = new BufferedReader(fr);
 
         String line;
         while ((line = br.readLine()) != null) {

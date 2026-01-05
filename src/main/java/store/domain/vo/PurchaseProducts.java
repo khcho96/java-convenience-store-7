@@ -45,10 +45,6 @@ public class PurchaseProducts {
         return purchaseProducts.toString();
     }
 
-    public Map<String, Integer> getPurchaseProducts() {
-        return purchaseProducts;
-    }
-
     public List<Product> getLessPromotionProducts(Products products) {
         List<Product> lessProducts = new ArrayList<>();
         for (Product product : products.getProducts()) {
