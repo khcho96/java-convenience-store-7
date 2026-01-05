@@ -3,6 +3,7 @@ package store.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import store.domain.Result;
 import store.domain.Stock;
 import store.domain.Store;
 
@@ -42,7 +43,7 @@ public class StoreService {
         return store.getStock();
     }
 
-    public void purchase(Map<String, Integer> items) {
-        store.purchase(items);
+    public Result purchase(Map<String, Integer> items) {
+        return store.purchase(items);
     }
 }

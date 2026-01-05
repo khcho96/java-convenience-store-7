@@ -50,4 +50,25 @@ public class Item {
     public int getTotalQuantity() {
         return proQuantity + quantity;
     }
+
+    public boolean isPromotionPossible() {
+        return promotion == null || promotion.isPossible();
+    }
+
+    public boolean isPromotionQuantityShortage(int purchaseQuantity) {
+        return (purchaseQuantity > proQuantity) ||
+                (purchaseQuantity == proQuantity && isChanceOfFree(purchaseQuantity));
+    }
+
+    public boolean isChanceOfFree(int purchaseQuantity) {
+        return purchaseQuantity % (promotion.getBuy() + promotion.getGet()) == promotion.getBuy();
+    }
+
+    public int getPromotionQuantityShortage(int purchaseQuantity) {
+        return purchaseQuantity - (proQuantity / (promotion.getBuy() + promotion.getGet())) * (promotion.getBuy() + promotion.getGet());
+    }
+
+    public boolean isMoreThan(int purchaseQuantity) {
+        return proQuantity > purchaseQuantity;
+    }
 }

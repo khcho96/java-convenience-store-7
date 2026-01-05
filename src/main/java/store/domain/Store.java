@@ -4,6 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import store.constant.ErrorMessage;
+import store.constant.Option;
+import store.util.InputParser;
+import store.util.Retry;
+import store.view.InputView;
 
 public class Store {
 
@@ -31,12 +35,62 @@ public class Store {
         return stock;
     }
 
-    public void purchase(Map<String, Integer> purchaseItems) {
+    public Result purchase(Map<String, Integer> purchaseItems) {
         List<Item> items = stock.getItems();
-
         validate(items, purchaseItems);
 
+        Result result = new Result();
 
+        for (String itemName : purchaseItems.keySet()) {
+            Item item = getItem(items, itemName);
+            int purchaseQuantity = purchaseItems.get(itemName);
+
+            if (!item.isPromotionPossible()) {
+                result.addNoPromotionPrice(item.getPrice() * purchaseQuantity);
+                result.addPurchaseItem(item, purchaseQuantity);
+                continue;
+            }
+
+            // 구매 수량 > 프로모션 수량 인지 확인
+            if (item.isPromotionQuantityShortage(purchaseQuantity)) {
+                // 맞으면 몇개를 정가로 사야하는지 계산 후 알려주고 입력 받아야함
+                int promotionQuantityShortage = item.getPromotionQuantityShortage(purchaseQuantity);
+
+                Option option = Retry.retryUntilSuccess(() ->
+                        InputParser.parseOption(InputView.readPromotionQuantityShortage(itemName, promotionQuantityShortage))
+                );
+                int promotionQuantity = purchaseQuantity - promotionQuantityShortage;
+                // Y: 일부는 할인적용, 나머지는 정가 계산, continue
+                if (option.equals(Option.YES)) {
+                    result.addPurchaseItem(item, purchaseQuantity);
+                    result.addPresentItem(item, item.getPromotion().getPresentQuantity(promotionQuantity));
+                    result.addNoPromotionPrice(item.getPrice() * promotionQuantityShortage);
+                    continue;
+                }
+
+                // N: 정가 수량 제외 후 결제, continue
+                result.addPurchaseItem(item, promotionQuantity);
+                result.addPresentItem(item, item.getPromotion().getPresentQuantity(promotionQuantity));
+                continue;
+            }
+
+            if (item.isChanceOfFree(purchaseQuantity) && item.isMoreThan(purchaseQuantity)) {
+                Option option = Retry.retryUntilSuccess(() ->
+                        InputParser.parseOption(InputView.readChanceOfFree(itemName))
+                );
+                if (option.equals(Option.YES)) {
+                    result.addPurchaseItem(item, purchaseQuantity + 1);
+                    result.addPresentItem(item, item.getPromotion().getPresentQuantity(purchaseQuantity + 1));
+                    continue;
+                }
+            }
+
+            result.addPurchaseItem(item, purchaseQuantity);
+            result.addPresentItem(item, item.getPromotion().getPresentQuantity(purchaseQuantity));
+            result.addNoPromotionPrice(item.getPrice() * item.getPromotion().getNoPresentQuantity(purchaseQuantity));
+        }
+
+        return result;
     }
 
     private void validate(List<Item> items, Map<String, Integer> purchaseItems) {

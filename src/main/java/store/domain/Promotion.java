@@ -1,5 +1,6 @@
 package store.domain;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 
 public class Promotion {
@@ -24,5 +25,26 @@ public class Promotion {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isPossible() {
+        LocalDate now = DateTimes.now().toLocalDate();
+        return !now.isBefore(startDate) && !now.isAfter(endDate);
+    }
+
+    public int getBuy() {
+        return buy;
+    }
+
+    public int getGet() {
+        return get;
+    }
+
+    public int getPresentQuantity(int promotionQuantity) {
+        return promotionQuantity / (buy + get);
+    }
+
+    public int getNoPresentQuantity(int purchaseQuantity) {
+        return purchaseQuantity % (buy + get);
     }
 }

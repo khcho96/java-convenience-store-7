@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import store.constant.Option;
+import store.domain.Result;
 import store.domain.Stock;
 import store.service.StoreService;
 import store.util.InputParser;
@@ -27,9 +28,9 @@ public class StoreController {
             Stock stock = storeService.getStock();
             OutputView.printStock(stock);
 
-            Retry.retryUntilSuccess(() -> {
+            Result result = Retry.retryUntilSuccess(() -> {
                 Map<String, Integer> items = InputParser.parseItems(InputView.readItems());
-                storeService.purchase(items);
+                return storeService.purchase(items);
             });
 
             if (getOption().equals(Option.NO)) {
