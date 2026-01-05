@@ -23,8 +23,24 @@ public class Item {
         return new Item(name, price, 0, quantity, null);
     }
 
-    public Object getName() {
-        return null;
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public int getProQuantity() {
+        return proQuantity;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public Promotion getPromotion() {
+        return promotion;
     }
 
     public void setNormalQuantity(int quantity) {

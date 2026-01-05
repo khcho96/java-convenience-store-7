@@ -23,4 +23,8 @@ public class Store {
     public void addPromotion(String name, int buy, int get, LocalDate startDate, LocalDate endDate) {
         promotions.addPromotion(name, buy, get, startDate, endDate);
     }
+
+    public Stock getStock() {
+        return stock;
+    }
 }

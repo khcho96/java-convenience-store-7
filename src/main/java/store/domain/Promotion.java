@@ -23,6 +23,6 @@ public class Promotion {
     }
 
     public String getName() {
-        return null;
+        return name;
     }
 }

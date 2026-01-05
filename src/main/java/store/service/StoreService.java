@@ -2,6 +2,7 @@ package store.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import store.domain.Stock;
 import store.domain.Store;
 
 public class StoreService {
@@ -34,5 +35,9 @@ public class StoreService {
 
             store.addItem(itemInfo[0], Integer.parseInt(itemInfo[1]), Integer.parseInt(itemInfo[2]), itemInfo[3]);
         }
+    }
+
+    public Stock getStock() {
+        return store.getStock();
     }
 }

@@ -21,8 +21,15 @@ public class Stock {
                 .filter(it -> it.getName().equals(itemName))
                 .findFirst();
 
-        item.ifPresent(it -> it.setNormalQuantity(quantity));
+        if (item.isPresent()) {
+            item.get().setNormalQuantity(quantity);
+            return;
+        }
 
         items.add(Item.of(itemName, price, quantity, promotion));
+    }
+
+    public List<Item> getItems() {
+        return items;
     }
 }

@@ -6,7 +6,6 @@ import store.constant.Option;
 
 public final class InputParser {
 
-    private static final String DELIMITER = ",";
     private static final String FIRST_DELIMITER = ",";
     private static final String SECOND_DELIMITER = "-";
 
@@ -21,9 +20,7 @@ public final class InputParser {
         rawInput = rawInput.strip();
         Validator.validateCsvFormat(rawInput);
 
-        List<String> list = getItems(rawInput);
-
-        return list;
+        return getItems(rawInput);
     }
 
     private static List<String> getItems(String rawInput) {

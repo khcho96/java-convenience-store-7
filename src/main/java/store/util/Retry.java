@@ -1,7 +1,7 @@
 package store.util;
 
 import java.util.function.Supplier;
-import main.java.lotto.view.OutputView;
+import store.view.OutputView;
 
 public final class Retry {
 
