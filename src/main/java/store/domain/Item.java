@@ -65,7 +65,8 @@ public class Item {
     }
 
     public int getPromotionQuantityShortage(int purchaseQuantity) {
-        return purchaseQuantity - (proQuantity / (promotion.getBuy() + promotion.getGet())) * (promotion.getBuy() + promotion.getGet());
+        return purchaseQuantity - (proQuantity / (promotion.getBuy() + promotion.getGet())) * (promotion.getBuy()
+                + promotion.getGet());
     }
 
     public boolean isMoreThan(int purchaseQuantity) {
@@ -74,9 +75,14 @@ public class Item {
 
     public void update(int purchaseQuantity) {
         if (proQuantity != 0) {
-            if (proQuantity > purchaseQuantity) {
-
+            if (proQuantity >= purchaseQuantity) {
+                proQuantity -= purchaseQuantity;
+                return;
             }
+            purchaseQuantity -= proQuantity;
+            proQuantity = 0;
         }
+
+        quantity -= purchaseQuantity;
     }
 }
