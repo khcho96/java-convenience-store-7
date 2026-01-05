@@ -4,8 +4,10 @@ import static java.util.Locale.KOREA;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import store.domain.Item;
 import store.domain.Promotion;
+import store.domain.Result;
 import store.domain.Stock;
 
 public class OutputView {
@@ -62,5 +64,26 @@ public class OutputView {
             System.out.printf("- %s %,d원 %d개\n", name, price, quantity);
         }
         System.out.println();
+    }
+
+
+    public static void printReceipt(Result result) {
+        Map<Item, Integer> finalPurchaseItems = result.getFinalPurchaseItems();
+        Map<Item, Integer> presentItems = result.getPresentItems();
+
+        System.out.println("==========W 편의점==========");
+        System.out.println("상품명          수량     금액");
+        for (Item item : finalPurchaseItems.keySet()) {
+            System.out.printf("%-15s%-7d%,d\n", item.getName(), finalPurchaseItems.get(item), item.getPrice() * finalPurchaseItems.get(item));
+        }
+        System.out.println("==========증   정==========");
+        for (Item item : presentItems.keySet()) {
+            System.out.printf("%-15s%-7d\n", item.getName(), presentItems.get(item));
+        }
+        System.out.println("==========================");
+        System.out.printf("총구매액        %-7d%,d\n", result.getTotalQuantity(), result.getTotalPrice());
+        System.out.printf("행사할인               -%,d\n", result.getPromotionPrice());
+        System.out.printf("멤버십할인             -%,d\n", result.getMembershipDiscountPrice());
+        System.out.printf("내실돈                %,d\n", result.getFinalPrice());
     }
 }

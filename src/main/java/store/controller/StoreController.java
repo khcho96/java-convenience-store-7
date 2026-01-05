@@ -33,6 +33,8 @@ public class StoreController {
                 return storeService.purchase(items);
             });
 
+            OutputView.printReceipt(result);
+
             if (getOption().equals(Option.NO)) {
                 break;
             }

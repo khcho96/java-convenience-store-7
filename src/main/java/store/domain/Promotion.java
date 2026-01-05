@@ -27,9 +27,9 @@ public class Promotion {
         return name;
     }
 
-    public boolean isPossible() {
+    public boolean isImpossible() {
         LocalDate now = DateTimes.now().toLocalDate();
-        return !now.isBefore(startDate) && !now.isAfter(endDate);
+        return now.isBefore(startDate) || now.isAfter(endDate);
     }
 
     public int getBuy() {

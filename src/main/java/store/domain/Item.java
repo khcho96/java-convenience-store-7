@@ -51,8 +51,8 @@ public class Item {
         return proQuantity + quantity;
     }
 
-    public boolean isPromotionPossible() {
-        return promotion == null || promotion.isPossible();
+    public boolean isPromotionImpossible() {
+        return promotion == null || promotion.isImpossible();
     }
 
     public boolean isPromotionQuantityShortage(int purchaseQuantity) {
@@ -70,5 +70,13 @@ public class Item {
 
     public boolean isMoreThan(int purchaseQuantity) {
         return proQuantity > purchaseQuantity;
+    }
+
+    public void update(int purchaseQuantity) {
+        if (proQuantity != 0) {
+            if (proQuantity > purchaseQuantity) {
+
+            }
+        }
     }
 }

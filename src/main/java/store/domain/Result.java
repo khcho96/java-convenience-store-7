@@ -35,11 +35,35 @@ public class Result {
         return membershipDiscountPrice;
     }
 
-    public int getNoPromotionPrice() {
-        return noPromotionPrice;
-    }
-
     public Map<Item, Integer> getPresentItems() {
         return presentItems;
+    }
+
+    public int getTotalPrice() {
+        int totalPrice = 0;
+        for (Item item : finalPurchaseItems.keySet()) {
+            totalPrice += item.getPrice() * finalPurchaseItems.get(item);
+        }
+        return totalPrice;
+    }
+
+    public int getPromotionPrice() {
+        int totalPrice = 0;
+        for (Item item : presentItems.keySet()) {
+            totalPrice += item.getPrice() * presentItems.get(item);
+        }
+        return totalPrice;
+    }
+
+    public int getFinalPrice() {
+        return getTotalPrice() - getPromotionPrice() - membershipDiscountPrice;
+    }
+
+    public int getTotalQuantity() {
+        int totalQuantity = 0;
+        for (Item item : finalPurchaseItems.keySet()) {
+            totalQuantity += finalPurchaseItems.get(item);
+        }
+        return totalQuantity;
     }
 }

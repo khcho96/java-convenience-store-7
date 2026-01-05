@@ -45,7 +45,7 @@ public class Store {
             Item item = getItem(items, itemName);
             int purchaseQuantity = purchaseItems.get(itemName);
 
-            if (!item.isPromotionPossible()) {
+            if (item.isPromotionImpossible()) {
                 result.addNoPromotionPrice(item.getPrice() * purchaseQuantity);
                 result.addPurchaseItem(item, purchaseQuantity);
                 continue;
@@ -96,6 +96,8 @@ public class Store {
         if (option.equals(Option.YES)) {
             result.addMembershipDiscount();
         }
+
+        stock.update(result);
 
         return result;
     }

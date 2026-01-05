@@ -2,6 +2,7 @@ package store.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class Stock {
@@ -31,5 +32,12 @@ public class Stock {
 
     public List<Item> getItems() {
         return items;
+    }
+
+    public void update(Result result) {
+        Map<Item, Integer> finalPurchaseItems = result.getFinalPurchaseItems();
+        for (Item item : finalPurchaseItems.keySet()) {
+            item.update(finalPurchaseItems.get(item));
+        }
     }
 }
