@@ -90,6 +90,13 @@ public class Store {
             result.addNoPromotionPrice(item.getPrice() * item.getPromotion().getNoPresentQuantity(purchaseQuantity));
         }
 
+        Option option = Retry.retryUntilSuccess(() ->
+            InputParser.parseOption(InputView.readMembership())
+        );
+        if (option.equals(Option.YES)) {
+            result.addMembershipDiscount();
+        }
+
         return result;
     }
 
