@@ -63,7 +63,9 @@ public class Store {
                 // Y: 일부는 할인적용, 나머지는 정가 계산, continue
                 if (option.equals(Option.YES)) {
                     result.addPurchaseItem(item, purchaseQuantity);
-                    result.addPresentItem(item, item.getPromotion().getPresentQuantity(promotionQuantity));
+                    if (item.getPromotion().getPresentQuantity(promotionQuantity) != 0){
+                        result.addPresentItem(item, item.getPromotion().getPresentQuantity(promotionQuantity));
+                    }
                     result.addNoPromotionPrice(item.getPrice() * promotionQuantityShortage);
                     continue;
                 }

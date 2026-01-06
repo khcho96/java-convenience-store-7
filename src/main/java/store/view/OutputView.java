@@ -40,8 +40,8 @@ public class OutputView {
 
             if (promotion != null) {
                 if (proQuantity == 0) {
-                    System.out.printf("- %s %,d원 재고 없음 %s\n%n", name, price, promotion.getName());
-                    System.out.printf("- %s %,d원 재고 없음%n\n", name, price);
+                    System.out.printf("- %s %,d원 재고 없음 %s\n", name, price, promotion.getName());
+                    System.out.printf("- %s %,d원 재고 없음\n", name, price);
                     continue;
                 }
 
@@ -66,24 +66,23 @@ public class OutputView {
         System.out.println();
     }
 
-
     public static void printReceipt(Result result) {
         Map<Item, Integer> finalPurchaseItems = result.getFinalPurchaseItems();
         Map<Item, Integer> presentItems = result.getPresentItems();
 
         System.out.println("==========W 편의점==========");
-        System.out.println("상품명          수량     금액");
+        System.out.printf("%-13s%-5s%s\n", "상품명", "수량", "금액");
         for (Item item : finalPurchaseItems.keySet()) {
-            System.out.printf("%-15s%-7d%,d\n", item.getName(), finalPurchaseItems.get(item), item.getPrice() * finalPurchaseItems.get(item));
+            System.out.printf("%-13s%-8d%,d\n", item.getName(), finalPurchaseItems.get(item), item.getPrice() * finalPurchaseItems.get(item));
         }
         System.out.println("==========증   정==========");
         for (Item item : presentItems.keySet()) {
-            System.out.printf("%-15s%-7d\n", item.getName(), presentItems.get(item));
+            System.out.printf("%-13s%-8d\n", item.getName(), presentItems.get(item));
         }
         System.out.println("==========================");
-        System.out.printf("총구매액        %-7d%,d\n", result.getTotalQuantity(), result.getTotalPrice());
-        System.out.printf("행사할인               -%,d\n", result.getPromotionPrice());
-        System.out.printf("멤버십할인             -%,d\n", result.getMembershipDiscountPrice());
-        System.out.printf("내실돈                %,d\n", result.getFinalPrice());
+        System.out.printf("%-13s%-8d%,d\n", "총구매액", result.getTotalQuantity(), result.getTotalPrice());
+        System.out.printf("%-21s-%,d\n", "행사할인", result.getPromotionPrice());
+        System.out.printf("%-21s-%,d\n", "멤버십할인", result.getMembershipDiscountPrice());
+        System.out.printf("%-21s%,d\n", "내실돈", result.getFinalPrice());
     }
 }
